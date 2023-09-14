@@ -12,11 +12,12 @@ const server = net.createServer((socket) => {
     
     // if there is incoming data from the client prints the incoming msg
     socket.on('data', (data) => {
+
         try {
             console.log(`\nData proveniente del cliente: ${data}`);
-            console.log("*************************************************\n");
-            // forming a string with the incoming data and removing whitespaces
+            console.log("\n--------------------------------------------------------------");
             const incoming_code= data.toString().trim(); 
+
             if (format.test(incoming_code)) {
                 const converted_code= incoming_code.replace(/[<>\[\]]/g, '');
                 const device_number= parseInt(converted_code.slice(0,4) ,16);
@@ -38,7 +39,7 @@ const server = net.createServer((socket) => {
                                 socket.write(`\nEl estado del dispositivo ya era desconectado(0)`);
                         }
                         else if(devices[device_number].status!==device_status){
-                            devices[device_number].status = device_status;
+                            devices[device_number].status = parseInt(device_status);
                             console.log(`\nEl estado del dispositivo (${device_number}) ha sido actualizado a (${device_status}).`);
                             socket.write(`\nEl estado del dispositivo (${device_number}) ha sido actualizado`);
                         }
@@ -50,17 +51,19 @@ const server = net.createServer((socket) => {
     
                 }
                 else{
-                    devices[device_number]={number:device_number, status: device_status}
+                    devices[device_number]={number:device_number, status: parseInt(device_status)}
                     console.log("\nNuevo dispositivo añadido")
                     socket.write(`\nDispositivo agregado al registro`);
                 } 
-                const deviceList = Object.keys(devices).map(deviceKey => `${devices[deviceKey].number}: ${devices[deviceKey].status}`).join(', ');
-                console.log(`\nLista de dispositivos en el registro: ${deviceList}`);  
+                // const deviceList = Object.keys(devices).map(deviceKey => `${devices[deviceKey].number}: ${devices[deviceKey].status}`).join(', ');
+                console.log(`\nLista de dispositivos en el registro: `);  
+                Object.values(devices).forEach(valor => console.log(valor));
+
                 
             }
             
         } catch (error) {
-            console.error(`Error al tratar la data proveniente del cliente: ${error}`);            
+            console.error(`Error al manipular la data proveniente del cliente: ${error}`);            
         }
 
     });
@@ -72,7 +75,7 @@ const server = net.createServer((socket) => {
 
     //handling error if cnxn fails
     socket.on('error', (err) => {
-        console.error(`Error en conexión: ${err}`);
+        console.error(`Error en conexión con el cliente: ${err}`);
     });
 });
 
