@@ -30,11 +30,11 @@ const server = net.createServer((socket) => {
                             console.log(`\nEl dispositivo (${device_number}) ha sido eliminado del registro.`);
                             socket.write(`\nDispositivo (${device_number}) eliminado.`);
                         }
-                        else if (devices[device_number].status===1 && device_status===1) {
+                        else if (devices[device_number].status==1 && device_status==1) {
                             console.log(`\nEl dispositivo (${device_number}) ya se encuentra conectado (${device_status}).`);
                             socket.write(`\nEl estado del dispositivo ya era conectado (1)`);
                         } 
-                        else if(devices[device_number].status===0 && device_status===0){
+                        else if(devices[device_number].status==0 && device_status==0){
                                 console.log(`\nEl dispositivo (${device_number}) ya se encuentra desconectado (${device_status}).`);
                                 socket.write(`\nEl estado del dispositivo ya era desconectado(0)`);
                         }
